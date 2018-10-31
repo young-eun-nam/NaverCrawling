@@ -1,18 +1,21 @@
 from bs4 import BeautifulSoup as bs
 from tqdm import *
 from selenium import webdriver
+import datetime
 import NaverCommon
 
 # URL 변수
+year = "2018"
 URL = "https://sports.news.naver.com/kfootball/schedule/index.nhn?"
 CATEGORY = "category="
-YEAR = "&year=2018"
+YEARUIL = "&year="
+YEAR = YEARUIL + year
 MONTH = "&month="
 
 # 기타 변수
 CONSOLEGUIDE = "Input league number(league_num 1:K1, 2:K2):  "
 FILEROUTE = '/Users/admin/chromedriver'
-DATAFRAME = ['Home_Team', 'Away_Team', 'Minute', 'Second', 'Team', 'Back_Number', 'Name', 'Event']
+DATAFRAME = ['Date', 'Day', 'Stadium', 'Home_Team', 'Away_Team', 'Minute', 'Second', 'Team', 'Back_Number', 'Name', 'Event', 'In_Player_Back_Number', 'In_Player_Name']
 FILENAME = "Naver_TextBroadcast"
 
 def setDriver(url, driver):
@@ -50,6 +53,12 @@ def getData(recording_link, driver):
                 get_class_name = text_broadcast[k].get('class')
                 get_time = recording_soup.findAll('strong', class_='time')[k].get_text().split(":")
                 get_team_name = recording_soup.findAll('strong', class_='team_name')
+                get_date_info = recording_soup.find('p', class_='d_day').get_text()
+                month = get_date_info.split('.')[0]
+                date = get_date_info.split('.')[1].split('(')[0]
+                day = get_date_info.split('.')[1].split('(')[1].split(')')[0]
+                d_day = datetime.date(int(year), int(month), int(date))
+                stadium = get_date_info.split(') ')[1]
 
                 # 문자 중계 중 class_name의 길이가 2인 경우에만 주요 event로 Strong text - Strong text인 문자중계만 crawling
                 if (len(get_class_name)) == 2:
@@ -60,22 +69,31 @@ def getData(recording_link, driver):
                     event = recording_soup.findAll('div', class_='sms')[k].find('strong').get_text().split(' ㅣ ')[1].split(' ')[1]
                     get_squad_name = recording_soup.findAll('tbody', id='squad_list')[0].findAll('td', class_='name')
                     player_list = checkPlyerBackNumber(get_squad_name)
-                    # event가 교체인 경우에만 Strong text 외에 일반 text도 crawling하여 교체 상대를 알 수 있게 함.
-                    if event == "교체":
-                        IN = recording_soup.findAll('div', class_='sms')[k].get_text().split('교체')[1].split(' 나가고 ')[1].split(' 들어옵니다')[0]
-                        event = event + " with " + IN
-                    else:
-                        pass
-                    raw_data.append(get_team_name[0].get_text())                                        # 1. Home_Team
-                    raw_data.append(get_team_name[1].get_text())                                        # 2. Away_Team
-                    raw_data.append(minute)                                                             # 3. Minute
-                    raw_data.append(second)                                                             # 4. Second
-                    raw_data.append(team)                                                               # 5. Team
+
+                    raw_data.append(d_day)                                                               # 1. Date
+                    raw_data.append(day)                                                                 # 2. Day
+                    raw_data.append(stadium)                                                             # 3. Stadium
+                    raw_data.append(get_team_name[0].get_text())                                         # 4. Home_Team
+                    raw_data.append(get_team_name[1].get_text())                                         # 5. Away_Team
+                    raw_data.append(minute)                                                              # 6. Minute
+                    raw_data.append(second)                                                              # 7. Second
+                    raw_data.append(team)                                                                # 8. Team
                     if name in player_list:
                         player_list_index = player_list.index(name)
-                        raw_data.append(get_squad_name[player_list_index].previous_sibling.get_text())  # 6. Back_Number
-                    raw_data.append(name)                                                               # 7. Name
-                    raw_data.append(event)                                                              # 8. Event
+                        raw_data.append(get_squad_name[player_list_index].previous_sibling.get_text())   # 9. Back_Number
+                    raw_data.append(name)                                                                # 10. Name
+                    raw_data.append(event)                                                               # 11. Event
+                    # event가 교체인 경우에만 Strong text 외에 일반 text도 crawling하여 교체 상대를 알 수 있게 함.
+                    if event == "교체":
+                        in_member = recording_soup.findAll('div', class_='sms')[k].get_text().split('교체')[1].split(' 나가고 ')[1].split(' 들어옵니다')[0]
+                        if in_member in player_list:
+                            in_member_index = player_list.index(in_member)
+                            raw_data.append(get_squad_name[in_member_index].previous_sibling.get_text())  # 12. In_Player_Back_Number
+                            raw_data.append(in_member)                                                    # 13. In_Player_Name
+                        else:
+                            pass
+                    else:
+                        pass
                     event_list.append(raw_data)
             each_month_event_list.extend(event_list)
     return each_month_event_list
