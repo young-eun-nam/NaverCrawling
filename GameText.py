@@ -65,8 +65,9 @@ def getData(recording_link, driver):
                     minute = get_time[0]
                     second = get_time[1]
                     team = recording_soup.findAll('div', class_='sms')[k].find('strong').get_text().split(' ㅣ ')[0]
-                    name = recording_soup.findAll('div', class_='sms')[k].find('strong').get_text().split(' ㅣ ')[1].split(' ')[0]
-                    event = recording_soup.findAll('div', class_='sms')[k].find('strong').get_text().split(' ㅣ ')[1].split(' ')[1]
+                    after_bar = recording_soup.findAll('div', class_='sms')[k].find('strong').get_text().split(' ㅣ ')[1].split(' ')
+                    name = " ".join(after_bar[0:len(after_bar)-1])
+                    event = after_bar[len(after_bar)-1]
                     get_squad_name = recording_soup.findAll('tbody', id='squad_list')[0].findAll('td', class_='name')
                     player_list = checkPlyerBackNumber(get_squad_name)
 

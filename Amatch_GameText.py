@@ -59,8 +59,9 @@ def getData(recording_link, driver):
                     minute = get_time[0]
                     second = get_time[1]
                     team = recording_soup.findAll('div', class_='sms')[j].find('strong').get_text().split(' ㅣ ')[0]
-                    name = recording_soup.findAll('div', class_='sms')[j].find('strong').get_text().split(' ㅣ ')[1].split(' ')[0]
-                    event = recording_soup.findAll('div', class_='sms')[j].find('strong').get_text().split(' ㅣ ')[1].split(' ')[1]
+                    after_bar = recording_soup.findAll('div', class_='sms')[j].find('strong').get_text().split(' ㅣ ')[1].split(' ')
+                    name = " ".join(after_bar[0:len(after_bar)-1])
+                    event = after_bar[len(after_bar)-1]
                     get_starting_name = recording_soup.findAll('tbody', id='starting_list')[0].findAll('td', class_='name')
                     get_reserve_name = recording_soup.findAll('tbody', id='reserve_list')[0].findAll('td', class_='name')
                     get_player_list = get_starting_name + get_reserve_name
@@ -77,6 +78,7 @@ def getData(recording_link, driver):
                     if name in squad_list:
                         player_list_index = squad_list.index(name)
                         raw_data.append(get_player_list[player_list_index].next_sibling.get_text())         # 9. Back_Number
+                    # Amatch 대한민국 상대팀인 경우 squad list가 제공되지 않으므로 등번호 NULL값
                     elif team == get_team_name[1].get_text():
                         raw_data.append("")
                     raw_data.append(name)                                                                   # 10. Name
