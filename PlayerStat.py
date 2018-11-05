@@ -19,7 +19,7 @@ AWAYBUTTON = "away_team_btn"
 # 기타 변수
 CONSOLEGUIDE = "Input league number(league_num 1:K1, 2:K2):  "
 FILEROUTE = '/Users/admin/chromedriver'
-DATAFRAME = ['Date', 'Day', 'Stadium', 'Team', 'Position', 'Back_Number', 'Name', 'Substitute', 'Gaol', 'Assist', 'Shoot', 'Foul', 'Yellow_Card', 'Sending_Off', 'Corner_Kick', 'Off-side']
+DATAFRAME = ['Date', 'Day', 'Stadium', 'Team', 'Position', 'Back_Number', 'Name', 'Substitute', 'Goal', 'Assist', 'Shoot', 'Foul', 'Yellow_Card', 'Sending_Off', 'Corner_Kick', 'Off-side']
 FILENAME = "Naver_PlayerStat"
 
 def setDriver(url, driver):
