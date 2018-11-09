@@ -9,8 +9,8 @@ year = "2018"
 URL = "https://sports.news.naver.com/kfootball/schedule/index.nhn?"
 GAMEURL = "https://sports.news.naver.com/gameCenter/textRelayFootball.nhn?"
 CATEGORY = "category=amatch"
-YEARUIL = "&year="
-YEAR = YEARUIL + year
+YEARURL = "&year="
+YEAR = YEARURL + year
 MONTH = "&month="
 
 # CLASS 명
