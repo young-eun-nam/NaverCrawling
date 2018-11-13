@@ -98,10 +98,6 @@ def getGameText(recording_soup, d_day, day, stadium, back_number_list, squad_nam
             after_bar = recording_soup.findAll('div', class_='sms')[j].find('strong').get_text().split(' ㅣ ')[1].split(' ')
             name = " ".join(after_bar[0:len(after_bar) - 1])
             event = after_bar[len(after_bar) - 1]
-            get_starting_name = recording_soup.findAll('tbody', id='starting_list')[0].findAll('td', class_='name')
-            get_reserve_name = recording_soup.findAll('tbody', id='reserve_list')[0].findAll('td', class_='name')
-            get_player_list = get_starting_name + get_reserve_name
-            squad_list = checkPlyerBackNumber(get_player_list)
 
             raw_data.append(d_day)                                      # 1. Date
             raw_data.append(day)                                        # 2. Day
