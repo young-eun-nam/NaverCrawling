@@ -33,14 +33,7 @@ def setDriver(url, driver):
 
 def setBasicInfo():
     league_url = URL + CATEGORY
-
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    browser = webdriver.Chrome(chrome_options=chrome_options)
-
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(FILEROUTE)
     schedule_soup = setDriver(league_url, driver)
     recording_link = schedule_soup.select('div.inner > a')  # 경기 기록 버튼 bs로 찾기
     each_game_stat_list, each_game_event_list = getData(recording_link, driver)  # getData 함수를 통해 crawling
