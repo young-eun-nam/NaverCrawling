@@ -32,15 +32,7 @@ def setDriver(url, driver):
 
 def setBasicInfo(league_str):
     league_url = URL + CATEGORY + league_str
-
-    # 서버 실행 시 필요
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    browser = webdriver.Chrome(chrome_options=chrome_options)
-
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(FILEROUTE)
     schedule_soup = setDriver(league_url, driver)
     month_list = schedule_soup.findAll('span', class_='month')  # 경기가 있었던 달 crawl
     stat_result = []
